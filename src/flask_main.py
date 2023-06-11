@@ -74,7 +74,7 @@ def predict():
             end_time=str(end_time)
         )
 
-        request_id = await database.execute(query)
+        request_id = database.execute(query)
 
         answer["request_id"] = str(request_id)
 
