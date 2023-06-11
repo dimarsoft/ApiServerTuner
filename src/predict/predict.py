@@ -1,3 +1,5 @@
+import time
+
 from tensorflow.keras.models import load_model
 import io
 from pathlib import Path
@@ -36,6 +38,16 @@ def download_model():
 model = download_model()
 
 
+def run_predict(image):
+    prediction = model.predict(image)
+
+    time.sleep(1)
+
+    class_id = np.argmax(prediction)
+
+    return class_id
+
+
 def predict_image(image) -> str:
     image = Image.open(io.BytesIO(image))
     if image.mode != "RGB":
@@ -44,8 +56,8 @@ def predict_image(image) -> str:
     image = np.array(image, dtype='float64') / 255
     image = np.expand_dims(image, axis=0)
 
-    preds = model.predict(image)
-    class_id = np.argmax(preds)
+    class_id = run_predict(image)  # model.predict(image)
+    # class_id = np.argmax(preds)
 
     return classes[int(class_id)]
 
@@ -60,8 +72,10 @@ async def predict_request_async(request: UploadFile) -> dict[str, str]:
         image = np.array(image, dtype='float64') / 255
         image = np.expand_dims(image, axis=0)
 
-        preds = await run_in_threadpool(model.predict, image)
-        class_id = np.argmax(preds)
+        class_id = await run_in_threadpool(run_predict, image)
+        # class_id = np.argmax(preds)
+
+        time.sleep(10)
 
         return {'class': classes[int(class_id)]}
 
@@ -80,6 +94,8 @@ def predict_request_sync(request: UploadFile) -> dict[str, str]:
 
         preds = model.predict(image)
         class_id = np.argmax(preds)
+
+        time.sleep(10)
 
         return {'class': classes[int(class_id)]}
 

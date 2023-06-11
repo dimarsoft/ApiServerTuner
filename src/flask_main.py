@@ -1,10 +1,13 @@
 """
 Основной модуль для приложения на Flask
 """
+import datetime
+
 import flask
 import sqlalchemy
 from flask import Flask, render_template, request, jsonify
 
+from src.model.database import SessionLocal, requests_table, database
 from src.predict.predict import predict_image
 from src.predict.time_tools import time_synch, time_elapsed
 
@@ -25,13 +28,21 @@ def view_about():
     return render_template("about.html", soft_version=soft_version)
 
 
+@app.get("/show")
+async def show_records():
+    db = SessionLocal()
+    records = db.query(requests_table).all()
+    return render_template("show.html", records=records)
+
+
 @app.route('/predict', methods=['POST'])
-def predict():
+async def predict():
     if request.files.get('image'):
         start_time = time_synch()
 
         print(f"start_time = {start_time}")
 
+        filename = request.files['image'].filename
         image = request.files['image'].read()
 
         class_str = predict_image(image)
@@ -50,6 +61,22 @@ def predict():
                 "time_elapsed": str(elapsed),
                 "start_time": str(start_time),
                 "end_time": str(end_time)}
+
+        date = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+        query = requests_table.insert().values(
+            date=date,
+            mode="sync",
+            image_class=answer["class"],
+            time_elapsed=str(elapsed),
+            file=filename,
+            start_time=str(start_time),
+            end_time=str(end_time)
+        )
+
+        request_id = await database.execute(query)
+
+        answer["request_id"] = str(request_id)
 
         return jsonify(answer)
 

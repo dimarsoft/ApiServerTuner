@@ -9,3 +9,5 @@ matplotlib
 pandas
 sqlalchemy
 flask-restplus
+databases
+gunicorn

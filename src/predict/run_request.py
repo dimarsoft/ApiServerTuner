@@ -52,7 +52,9 @@ def run_in_folder(folder: str, url: str, trials: int = 10):
             file = str(entry)
             ans = run(file, url)
 
-            print(f"{trial}. file {file}, {ans}")
+            time_elapsed_str = ans["time_elapsed"]
+
+            print(f"{trial}. file {file}, elapsed = {time_elapsed_str}c")
 
 
 def run_in_folder_th(folder: str, url: str, trials: int = 10):
@@ -71,12 +73,13 @@ def run_in_folder_th(folder: str, url: str, trials: int = 10):
 
 
 def example():
-    url = "http://127.0.0.1:5010/predict"
-    url = "http://127.0.0.1:5020/image_predict_sync"
-    url = "http://127.0.0.1:5020/image_predict_async"
-    folder = "C:\\AI\\my_phos"
+    url_flask = "http://127.0.0.1:5010/predict"
+    url_sync = "http://127.0.0.1:5020/image_predict_sync"
+    url_async = "http://127.0.0.1:5020/image_predict_async"
+    # folder = "C:\\AI\\my_phos"
+    folder = "C:\\AI\\my_phos\\test_images"
 
-    run_in_folder_th(folder, url)
+    run_in_folder_th(folder, url_flask)
 
 
 example()

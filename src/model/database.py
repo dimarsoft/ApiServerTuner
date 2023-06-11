@@ -2,7 +2,7 @@ import sqlalchemy
 import databases
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "sqlite:///./support.db"
+DATABASE_URL = "sqlite:///./request_info.db"
 
 # создаем таблицу в базе данных
 metadata = sqlalchemy.MetaData()
@@ -14,6 +14,7 @@ requests_table = sqlalchemy.Table(
     sqlalchemy.Column("date", sqlalchemy.String),
     sqlalchemy.Column("mode", sqlalchemy.String),
     sqlalchemy.Column("file", sqlalchemy.String),
+    sqlalchemy.Column("image_class", sqlalchemy.String),
     sqlalchemy.Column("time_elapsed", sqlalchemy.String),
     sqlalchemy.Column("start_time", sqlalchemy.String),
     sqlalchemy.Column("end_time", sqlalchemy.String)

@@ -6,7 +6,6 @@ import datetime
 from fastapi import APIRouter, UploadFile, File
 from fastapi.templating import Jinja2Templates
 
-
 from src.predict.predict import predict_request_sync, predict_request_async
 from src.predict.time_tools import time_synch, time_elapsed
 from src.model.database import requests_table, database, SessionLocal
@@ -43,6 +42,7 @@ async def image_predict_async(image: UploadFile = File(...)):
         mode="async",
         time_elapsed=str(elapsed),
         file=image.filename,
+        image_class=answer["class"],
         start_time=str(start_time),
         end_time=str(end_time)
     )
@@ -51,12 +51,11 @@ async def image_predict_async(image: UploadFile = File(...)):
 
     answer["request_id"] = str(request_id)
 
-
     return answer
 
 
 @predict_pages.post('/image_predict_sync')
-def image_predict_sync(image: UploadFile = File(...)):
+async def image_predict_sync(image: UploadFile = File(...)):
     start_time = time_synch()
 
     print(f"start_time = {start_time}")
@@ -80,13 +79,14 @@ def image_predict_sync(image: UploadFile = File(...)):
     query = requests_table.insert().values(
         date=date,
         mode="sync",
+        image_class=answer["class"],
         time_elapsed=str(elapsed),
         file=image.filename,
         start_time=str(start_time),
         end_time=str(end_time)
     )
 
-    request_id = database.execute(query)
+    request_id = await database.execute(query)
 
     answer["request_id"] = str(request_id)
 
