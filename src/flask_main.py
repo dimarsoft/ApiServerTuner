@@ -7,9 +7,9 @@ import flask
 import sqlalchemy
 from flask import Flask, render_template, request, jsonify
 
-from src.model.database import SessionLocal, requests_table, database
-from src.predict.predict import predict_image
-from src.predict.time_tools import time_synch, time_elapsed
+from model.database import SessionLocal, requests_table, database
+from predict.predict import predict_image
+from predict.time_tools import time_synch, time_elapsed
 
 app = Flask(__name__, template_folder='templates/flask')
 
