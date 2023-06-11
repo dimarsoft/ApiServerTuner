@@ -3,7 +3,10 @@
 """
 import flask
 import sqlalchemy
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
+
+from src.predict.predict import predict_image
+from src.predict.time_tools import time_synch, time_elapsed
 
 app = Flask(__name__, template_folder='templates/flask')
 
@@ -15,11 +18,42 @@ def view_main():
 
 @app.route('/about')
 def view_about():
-    soft_version = f"1.1."\
-                   f"Flask {flask.__version__}, "\
+    soft_version = f"1.1." \
+                   f"Flask {flask.__version__}, " \
                    f"Sqlalchemy {sqlalchemy.__version__}"
 
     return render_template("about.html", soft_version=soft_version)
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if request.files.get('image'):
+        start_time = time_synch()
+
+        print(f"start_time = {start_time}")
+
+        image = request.files['image'].read()
+
+        class_str = predict_image(image)
+
+        end_time = time_synch()
+
+        print(f"end_time = {end_time}")
+
+        elapsed = time_elapsed(start_time, end_time)
+
+        print(f"elapsed = {elapsed}")
+
+        answer = \
+            {
+                "class": class_str,
+                "time_elapsed": str(elapsed),
+                "start_time": str(start_time),
+                "end_time": str(end_time)}
+
+        return jsonify(answer)
+
+    return jsonify({'error': 'No image provided'}), 400
 
 
 if __name__ == '__main__':

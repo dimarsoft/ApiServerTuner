@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 # from models import download_models
 
 from pages.router import router_pages
+from src.pages.predict_page import predict_pages
+
 # from pages.user_request import user_router
 
 app = FastAPI(title="Занятие №5. FastAPI.")
@@ -29,6 +31,7 @@ app.add_middleware(
 )
 
 app.include_router(router_pages)
+app.include_router(predict_pages)
 # app.include_router(user_router)
 
 
