@@ -1,0 +1,86 @@
+{% extends 'layout.html' %}
+{% block title %}
+Журнал обращений граждан.
+{% endblock %}
+{% block content %}
+
+
+<section>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<!-- Для кнопок просмотра и удаления файлов-->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  	<h1 class="text_box" style="text-align: center;">Журнал обращений граждан</h1>
+    <div class="col-xs-8 col-xs-offset-2 well">
+	<table class="table table-scroll table-striped" style="width:100%; border:2;">
+		<thead class="thead-dark">
+			<tr>
+			  <th class="col-xs-2">Дата</th>
+			  <th class="col-xs-2">Имя</th>
+			  <th class="col-xs-2">Email</th>
+			  <th class="col-xs-2">Категория</th>
+			  <th class="col-xs-2">Текст обращения</th>
+			  <th class="col-xs-2">Статус</th>
+
+				<th class="col-xs-2" >Действия</th>
+			</tr>
+	  	</thead>
+		<tbody id="table-body"
+			   class="text_box" style=" font-size: 24px; color: white; !important; overflow: scroll;">
+			{% for record in records %}
+			<tr id="{{ record.id }}" >
+				<td>{{ record.date }}</td>
+				<td>{{ record.name }}</td>
+				<td>{{ record.email }}</td>
+				<td>{{ record.category }}</td>
+				<td>{{ record.message }}</td>
+				<td>{{ record.status }}</td>
+				<td>
+					<button class="delete-button">
+						<i class="material-icons">&#xE872;</i>
+					</button>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+  </div>
+</section>
+
+  <!-- Здесь можно добавлять содержимое страницы -->
+  <script>
+	// '.tbl-content' consumed little space for vertical scrollbar, scrollbar width depend on browser/os/platfrom. Here calculate the scollbar width .
+	$(window).on("load resize ", function() {
+	  var scrollWidth = $('.tbl-content').width() - $('.tbl-content table').width();
+	  $('.tbl-header').css({'padding-right':scrollWidth});
+	}).resize();
+  </script>
+  <script>
+	// Добавляем обработчик событий на кнопку "удалить"
+	$('.delete-button').click(function() {
+		// Получаем id записи
+		var id = $(this).closest('tr').attr('id');
+
+		// Вызываем функцию для удаления записи
+		deleteRecord(id);
+	});
+
+	// Функция для удаления записи из базы данных
+	function deleteRecord(record_id) {
+    // Отправляем запрос на сервер для удаления записи
+    $.ajax({		
+	  url: '/delete_record',
+	  type: 'POST',
+	  data: JSON.stringify({record_id: record_id}),
+	  contentType: 'application/json',
+	  success: function(response) {
+		$('#' + record_id).remove();
+	  },
+	  error: function() {
+		alert('Ошибка при удалении записи!');
+	  }
+	});
+	}
+  </script>
+
+{% endblock %}
