@@ -29,14 +29,14 @@ def view_about():
 
 
 @app.get("/show")
-async def show_records():
+def show_records():
     db = SessionLocal()
     records = db.query(requests_table).all()
     return render_template("show.html", records=records)
 
 
 @app.route('/predict', methods=['POST'])
-async def predict():
+def predict():
     if request.files.get('image'):
         start_time = time_synch()
 
