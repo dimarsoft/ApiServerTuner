@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 import datetime
 from pydantic import BaseModel
 
-from src.model.database import SessionLocal, requests_table
+from model.database import SessionLocal, requests_table
 
 # from model.database import requests_table, database, SessionLocal
 

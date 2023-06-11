@@ -6,9 +6,9 @@ import datetime
 from fastapi import APIRouter, UploadFile, File
 from fastapi.templating import Jinja2Templates
 
-from src.predict.predict import predict_request_sync, predict_request_async
-from src.predict.time_tools import time_synch, time_elapsed
-from src.model.database import requests_table, database, SessionLocal
+from predict.predict import predict_request_sync, predict_request_async
+from predict.time_tools import time_synch, time_elapsed
+from model.database import requests_table, database, SessionLocal
 
 predict_pages = APIRouter()
 
