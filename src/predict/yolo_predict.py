@@ -30,6 +30,14 @@ def predict_yolo(image) -> tuple[int, str, float]:
     return class_id, name, conf
 
 
+def predict_yolo_bytes(image) -> tuple[int, str, float]:
+    image = Image.open(io.BytesIO(image))
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+
+    return predict_yolo(image)
+
+
 async def predict_request_yolo(request: UploadFile) -> dict[str, str]:
     if request.file:
         image = request.file.read()
