@@ -1,14 +1,12 @@
 """
 Модуль для главной страницы сервер и страницы о программе
 """
-import datetime
 
 from fastapi import APIRouter, UploadFile, File
 from fastapi.templating import Jinja2Templates
 
 from predict.predict import predict_request_sync, predict_request_async
 from predict.time_tools import time_synch, time_elapsed
-from model.database import requests_table, database, SessionLocal
 
 predict_pages = APIRouter()
 
@@ -35,22 +33,6 @@ async def image_predict_async(image: UploadFile = File(...)):
     answer["start_time"] = str(start_time)
     answer["end_time"] = str(end_time)
 
-    date = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-    query = requests_table.insert().values(
-        date=date,
-        mode="async",
-        time_elapsed=str(elapsed),
-        file=image.filename,
-        image_class=answer["class"],
-        start_time=str(start_time),
-        end_time=str(end_time)
-    )
-
-    request_id = await database.execute(query)
-
-    answer["request_id"] = str(request_id)
-
     return answer
 
 
@@ -73,21 +55,5 @@ async def image_predict_sync(image: UploadFile = File(...)):
     answer["time_elapsed"] = str(elapsed)
     answer["start_time"] = str(start_time)
     answer["end_time"] = str(end_time)
-
-    date = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-    query = requests_table.insert().values(
-        date=date,
-        mode="sync",
-        image_class=answer["class"],
-        time_elapsed=str(elapsed),
-        file=image.filename,
-        start_time=str(start_time),
-        end_time=str(end_time)
-    )
-
-    request_id = await database.execute(query)
-
-    answer["request_id"] = str(request_id)
 
     return answer

@@ -1,5 +1,5 @@
 FastAPI
-Flask
+Flask[all]
 uvicorn
 python-multipart
 tensorflow

@@ -62,21 +62,12 @@ def predict():
                 "start_time": str(start_time),
                 "end_time": str(end_time)}
 
-        date = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        # date = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-        query = requests_table.insert().values(
-            date=date,
-            mode="sync",
-            image_class=answer["class"],
-            time_elapsed=str(elapsed),
-            file=filename,
-            start_time=str(start_time),
-            end_time=str(end_time)
-        )
 
-        request_id = database.execute(query)
+        # request_id = database.execute(query)
 
-        answer["request_id"] = str(request_id)
+        # answer["request_id"] = str(request_id)
 
         return jsonify(answer)
 
