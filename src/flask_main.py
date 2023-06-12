@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, jsonify
 from model.database import SessionLocal, requests_table
 from predict.predict import predict_image
 from predict.time_tools import time_synch, time_elapsed
-from src.predict.yolo_predict import predict_yolo
+from predict.yolo_predict import predict_yolo
 
 app = Flask(__name__, template_folder='templates/flask')
 
