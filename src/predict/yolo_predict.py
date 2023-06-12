@@ -35,6 +35,8 @@ def predict_yolo_bytes(image) -> tuple[int, str, float]:
     if image.mode != "RGB":
         image = image.convert("RGB")
 
+    # image = np.array(image)
+
     return predict_yolo(image)
 
 
