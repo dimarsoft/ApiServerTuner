@@ -1,7 +1,9 @@
 """
 Модуль для главной страницы сервер и страницы о программе
 """
-import sqlalchemy
+
+import torch
+import ultralytics
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 import fastapi
@@ -31,6 +33,7 @@ async def get_about_page(request: Request):
                                       {"request": request,
                                        "soft_version": f"1.1."
                                                        f"FastAPI {fastapi.__version__}, "
-                                                       f"Sqlalchemy {sqlalchemy.__version__}"
+                                                       f"torch {torch.__version__} , "
+                                                       f"ultralytics {ultralytics.__version__}"
                                        }
                                       )

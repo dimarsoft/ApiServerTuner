@@ -11,4 +11,5 @@ sqlalchemy
 flask-restplus
 databases
 gunicorn
-ultralytics==8.0.99
+ultralytics
+torch

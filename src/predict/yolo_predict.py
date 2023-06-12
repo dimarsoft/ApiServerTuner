@@ -4,7 +4,7 @@
 """
 import io
 
-import numpy as np
+import torch
 from PIL import Image
 from fastapi import UploadFile
 from fastapi.concurrency import run_in_threadpool
@@ -21,21 +21,20 @@ def predict_yolo(image) -> tuple[int, str, float]:
         tuple[int, str, float]: Класс, название, вероятность
     """
     results = model.predict(image)
-    probs = results[0].probs.cpu()
-    class_id = int(np.argmax(probs))
+    probs = results[0].probs.data
+    class_id = int(torch.argmax(probs))
+
     conf = float(probs[class_id])
 
-    name = results[0].names[int(class_id)]
+    class_name = results[0].names[int(class_id)]
 
-    return class_id, name, conf
+    return class_id, class_name, conf
 
 
 def predict_yolo_bytes(image) -> tuple[int, str, float]:
     image = Image.open(io.BytesIO(image))
     if image.mode != "RGB":
         image = image.convert("RGB")
-
-    # image = np.array(image)
 
     return predict_yolo(image)
 
@@ -47,11 +46,11 @@ async def predict_request_yolo(request: UploadFile) -> dict[str, str]:
         if image.mode != "RGB":
             image = image.convert("RGB")
 
-        class_id, name, conf = await run_in_threadpool(predict_yolo, image)
+        class_id, class_name, conf = await run_in_threadpool(predict_yolo, image)
 
         return {
             "class_id": str(class_id),
-            "class": name,
+            "class": class_name,
             "conf": str(conf)
         }
 
@@ -61,9 +60,9 @@ def run():
     Отладка локально
     :return:
     """
-    class_id, name, conf = predict_yolo("C:\\AI\\my_phos\\test_images\\6.jpg")
+    class_id, class_name, conf = predict_yolo("C:\\AI\\my_phos\\test_images\\6.jpg")
 
-    print(f"name = {name}, {class_id}, {conf}")
+    print(f"class_name = {class_name}, id = {class_id}, conf = {conf}")
 
 
 if __name__ == '__main__':
