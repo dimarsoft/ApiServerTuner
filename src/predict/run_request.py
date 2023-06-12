@@ -90,17 +90,26 @@ def run_in_folder_th(folder: str, url: str, trials: int = 10, tag: str = ""):
 def example():
     url_flask = "http://127.0.0.1:5010/predict"
     url_flask_sync = "http://127.0.0.1:5010/predict_sync"
-    # url_flask = "http://84.201.155.246:8000/predict"
+    url_flask_sync = "http://84.201.162.106:8000/predict"
     url_sync = "http://127.0.0.1:5020/image_predict_sync"
-    # url_sync = "http://84.201.155.246:8000/image_predict_sync"
+
     url_async = "http://127.0.0.1:5020/image_predict_async"
-    # url_async = "http://84.201.155.246:8000/image_predict_async"
+    url_fastapi_async = "http://84.201.162.106:8000/image_predict_async"
+    url_fastapi_sync = "http://84.201.162.106:8000/image_predict_sync"
+
     # folder = "C:\\AI\\my_phos"
     folder = "C:\\AI\\my_phos\\test_images"
 
     # run_in_folder_th(folder, url_async, 2, "async")
     # run_in_folder_th(folder, url_sync, 2, "sync")
-    run_in_folder_th(folder, url_flask_sync, 10, "flask_sync")
+    # run_in_folder_th(folder, url_flask_sync, 10, "flask_sync")
+    # run_in_folder_th(folder, url_fastapi_async, 10, "fastapi_async")
 
+    # run_in_folder_th(folder, url_fastapi_sync, 10, "fastapi_sync")
+    # run_in_folder_th(folder, url_flask_sync, 10, "flask_sync")
+
+    url_sync_yolo = "http://127.0.0.1:5020/image_predict_yolo"
+
+    run_in_folder_th(folder, url_sync_yolo, 10, "async_yolo")
 
 example()

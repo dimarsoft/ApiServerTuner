@@ -1,13 +1,12 @@
 """
 Основной модуль для приложения на Flask
 """
-import datetime
 
 import flask
 import sqlalchemy
 from flask import Flask, render_template, request, jsonify
 
-from model.database import SessionLocal, requests_table, database
+from model.database import SessionLocal, requests_table
 from predict.predict import predict_image
 from predict.time_tools import time_synch, time_elapsed
 
@@ -42,7 +41,7 @@ def predict():
 
         print(f"start_time = {start_time}")
 
-        filename = request.files['image'].filename
+        # filename = request.files['image'].filename
         image = request.files['image'].read()
 
         class_str = predict_image(image)
@@ -60,14 +59,8 @@ def predict():
                 "class": class_str,
                 "time_elapsed": str(elapsed),
                 "start_time": str(start_time),
-                "end_time": str(end_time)}
-
-        # date = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-
-        # request_id = database.execute(query)
-
-        # answer["request_id"] = str(request_id)
+                "end_time": str(end_time)
+            }
 
         return jsonify(answer)
 

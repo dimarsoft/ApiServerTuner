@@ -11,3 +11,4 @@ sqlalchemy
 flask-restplus
 databases
 gunicorn
+ultralytics
