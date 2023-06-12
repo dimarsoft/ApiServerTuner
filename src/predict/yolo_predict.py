@@ -41,7 +41,7 @@ async def predict_request_yolo(request: UploadFile) -> dict[str, str]:
 
         return {
             "class_id": str(class_id),
-            "name": name,
+            "class": name,
             "conf": str(conf)
         }
 
